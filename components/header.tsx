@@ -1,22 +1,30 @@
 "use client";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Logo } from "@/components/logo";
 import { Menu, QrCode, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import React from "react";
 import { cn } from "@/lib/utils";
 
-const menuItems = [
-  { name: "Restaurants", href: "/restaurants" },
-  { name: "Features", href: "#features" },
-  { name: "Pricing", href: "#pricing" },
-  { name: "Support", href: "#support" },
-  { name: "About", href: "#about" },
-];
-
 export const Header = () => {
+  const pathname = usePathname();
   const [menuState, setMenuState] = React.useState(false);
   const [isScrolled, setIsScrolled] = React.useState(false);
+
+  const isBusiness = pathname === "/for-business";
+
+  const menuItems = [
+    ...(isBusiness
+      ? [
+          { name: "Pricing", href: "/pricing" },
+          { name: "Marketplace", href: "/" },
+        ]
+      : [
+          { name: "For Business", href: "/for-business" },
+          { name: "Restaurants", href: "/restaurants" },
+        ]),
+  ];
 
   React.useEffect(() => {
     const handleScroll = () => {
@@ -25,17 +33,18 @@ export const Header = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
   return (
     <header>
       <nav
         data-state={menuState && "active"}
         className={cn(
-          "fixed z-20 w-full transition-all duration-300",
+          "fixed z-20 w-full transition-all duration-300 px-4",
           isScrolled &&
             "bg-background/75 border-b border-black/5 backdrop-blur-lg"
         )}
       >
-        <div className="mx-auto max-w-5xl px-6">
+        <div className="mx-auto max-w-7xl">
           <div className="relative flex flex-wrap items-center justify-between gap-6 py-3 lg:gap-0">
             <div className="flex w-full justify-between gap-6 lg:w-auto">
               <Link
@@ -43,14 +52,12 @@ export const Header = () => {
                 aria-label="home"
                 className="flex items-center space-x-2"
               >
-                <QrCode className="size-6" />
-                <span className="font-serif font-bold text-lg">Menyro</span>
-                {/* <Logo /> */}
+                <Logo />
               </Link>
 
               <button
                 onClick={() => setMenuState(!menuState)}
-                aria-label={menuState == true ? "Close Menu" : "Open Menu"}
+                aria-label={menuState ? "Close Menu" : "Open Menu"}
                 className="relative z-20 -m-2.5 -mr-4 block cursor-pointer p-2.5 lg:hidden"
               >
                 <Menu className="in-data-[state=active]:rotate-180 in-data-[state=active]:scale-0 in-data-[state=active]:opacity-0 m-auto size-6 duration-200" />
