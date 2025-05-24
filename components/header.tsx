@@ -6,11 +6,13 @@ import { Menu, QrCode, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import React from "react";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/use-auth";
 
 export const Header = () => {
   const pathname = usePathname();
   const [menuState, setMenuState] = React.useState(false);
   const [isScrolled, setIsScrolled] = React.useState(false);
+  const { user, loading } = useAuth();
 
   const isBusiness = pathname === "/for-business";
 
@@ -57,7 +59,7 @@ export const Header = () => {
           <div className="relative flex flex-wrap items-center justify-between gap-6 py-3 lg:gap-0">
             <div className="flex w-full justify-between gap-6 lg:w-auto">
               <Link
-                href="/"
+                href={user ? "/dashboard" : "/"}
                 aria-label="home"
                 className="flex items-center space-x-2"
               >
@@ -103,36 +105,51 @@ export const Header = () => {
                   ))}
                 </ul>
               </div>
-              <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
-                <Button
-                  asChild
-                  variant="ghost"
-                  size="sm"
-                  className={cn(isScrolled && "lg:hidden")}
-                >
-                  <Link href="/sign-in">
-                    <span>Login</span>
-                  </Link>
-                </Button>
-                <Button
-                  asChild
-                  size="sm"
-                  className={cn(isScrolled && "lg:hidden")}
-                >
-                  <Link href="/sign-up">
-                    <span>Sign Up</span>
-                  </Link>
-                </Button>
-                <Button
-                  asChild
-                  size="sm"
-                  className={cn(isScrolled ? "lg:inline-flex" : "hidden")}
-                >
-                  <Link href="/for-business">
-                    <span>Get Started</span>
-                  </Link>
-                </Button>
-              </div>
+
+              {!loading && (
+                <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
+                  {user ? (
+                    // Show dashboard link for authenticated users
+                    <Button asChild size="sm">
+                      <Link href="/dashboard">
+                        <span>Dashboard</span>
+                      </Link>
+                    </Button>
+                  ) : (
+                    // Show login/signup for unauthenticated users
+                    <>
+                      <Button
+                        asChild
+                        variant="ghost"
+                        size="sm"
+                        className={cn(isScrolled && "lg:hidden")}
+                      >
+                        <Link href="/sign-in">
+                          <span>Login</span>
+                        </Link>
+                      </Button>
+                      <Button
+                        asChild
+                        size="sm"
+                        className={cn(isScrolled && "lg:hidden")}
+                      >
+                        <Link href="/sign-up">
+                          <span>Sign Up</span>
+                        </Link>
+                      </Button>
+                      <Button
+                        asChild
+                        size="sm"
+                        className={cn(isScrolled ? "lg:inline-flex" : "hidden")}
+                      >
+                        <Link href="/for-business">
+                          <span>Get Started</span>
+                        </Link>
+                      </Button>
+                    </>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>

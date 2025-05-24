@@ -1,34 +1,33 @@
 import { z } from "zod";
 
 // Enhanced search filters schema with proper validation
+
 export const searchFiltersSchema = z.object({
   query: z
     .string()
     .trim()
-    .max(100, "Search query must be less than 100 characters")
-    .default(""),
+    .max(100, "Search query must be less than 100 characters"),
+
   location: z
     .string()
     .trim()
-    .max(50, "Location must be less than 50 characters")
-    .default(""),
-  cuisine: z
-    .string()
-    .trim()
-    .max(50, "Cuisine must be less than 50 characters")
-    .default(""),
-  sortBy: z
-    .enum(["relevance", "name", "rating", "distance"], {
-      errorMap: () => ({ message: "Please select a valid sort option" }),
-    })
-    .default("relevance"),
+    .max(50, "Location must be less than 50 characters"),
+
+  cuisine: z.string().trim().max(50, "Cuisine must be less than 50 characters"),
+
+  sortBy: z.enum(["relevance", "name", "rating", "distance"], {
+    errorMap: () => ({ message: "Please select a valid sort option" }),
+  }),
+
   priceRange: z
     .enum(["budget", "mid", "upscale"], {
       errorMap: () => ({ message: "Please select a valid price range" }),
     })
     .optional(),
-  isOpen: z.boolean().optional().default(false),
-  isFeatured: z.boolean().optional().default(false),
+
+  isOpen: z.boolean(),
+
+  isFeatured: z.boolean(),
 });
 
 // Extended schema for search parameters including pagination
@@ -61,6 +60,7 @@ export const restaurantSchema = z.object({
   slug: z.string().min(1, "Slug is required"),
   description: z.string().max(500, "Description too long").optional(),
   image: z.string().url("Invalid image URL").optional(),
+  restaurantType: z.string().optional(),
   bannerImage: z.string().url("Invalid banner image URL").optional(),
   location: z.object({
     address: z.string().min(1, "Address is required"),
@@ -162,9 +162,22 @@ export const searchResultSchema = z.object({
   hasPrevPage: z.boolean(),
 });
 
-// Type exports
-export type SearchFiltersInput = z.infer<typeof searchFiltersSchema>;
-export type SearchParamsInput = z.infer<typeof searchParamsSchema>;
+// Type exports that match the interfaces exactly
+export type SearchFiltersInput = {
+  query: string;
+  location: string;
+  cuisine: string;
+  sortBy: "relevance" | "name" | "rating" | "distance";
+  priceRange?: "budget" | "mid" | "upscale";
+  isOpen: boolean;
+  isFeatured: boolean;
+};
+
+export type SearchParamsInput = SearchFiltersInput & {
+  page: number;
+  limit: number;
+};
+
 export type RestaurantInput = z.infer<typeof restaurantSchema>;
 export type FilterOptionsInput = z.infer<typeof filterOptionsSchema>;
 export type SearchResultInput = z.infer<typeof searchResultSchema>;
@@ -190,6 +203,21 @@ export const validateSearchResult = (data: unknown) => {
   return searchResultSchema.safeParse(data);
 };
 
+// Transform function to convert Zod output to interface type
+export const transformSearchFilters = (
+  zodOutput: z.infer<typeof searchFiltersSchema>
+): SearchFiltersInput => {
+  return {
+    query: zodOutput.query,
+    location: zodOutput.location,
+    cuisine: zodOutput.cuisine,
+    sortBy: zodOutput.sortBy,
+    priceRange: zodOutput.priceRange,
+    isOpen: zodOutput.isOpen,
+    isFeatured: zodOutput.isFeatured,
+  };
+};
+
 // URL search params validation for Next.js
 export const parseSearchParamsFromURL = (searchParams: URLSearchParams) => {
   const params = {
@@ -204,5 +232,19 @@ export const parseSearchParamsFromURL = (searchParams: URLSearchParams) => {
     limit: parseInt(searchParams.get("limit") || "12"),
   };
 
-  return validateSearchParams(params);
+  const result = validateSearchParams(params);
+  if (result.success) {
+    return {
+      ...result,
+      data: {
+        ...result.data,
+        query: result.data.query,
+        location: result.data.location,
+        cuisine: result.data.cuisine,
+        isOpen: result.data.isOpen,
+        isFeatured: result.data.isFeatured,
+      },
+    };
+  }
+  return result;
 };

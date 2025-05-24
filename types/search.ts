@@ -6,8 +6,8 @@ export interface SearchFilters {
   cuisine: string;
   sortBy: "relevance" | "name" | "rating" | "distance";
   priceRange?: "budget" | "mid" | "upscale";
-  isOpen?: boolean;
-  isFeatured?: boolean;
+  isOpen: boolean;
+  isFeatured: boolean;
 }
 
 export interface SearchParams extends SearchFilters {

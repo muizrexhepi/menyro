@@ -5,9 +5,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Search, MapPin, ChefHat, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { searchFiltersSchema, SearchFiltersInput } from "@/lib/validatitons";
 import { SearchFilters, FilterOptions } from "@/types/search";
 import { cn } from "@/lib/utils";
+import {
+  searchFiltersSchema,
+  transformSearchFilters,
+} from "@/lib/validatitons";
 
 interface SearchFormProps {
   filters: SearchFilters;
@@ -17,6 +20,17 @@ interface SearchFormProps {
   onToggleAdvanced?: () => void;
   isLoading?: boolean;
 }
+
+// Form data type that matches the Zod schema exactly
+type FormData = {
+  query: string;
+  location: string;
+  cuisine: string;
+  sortBy: "relevance" | "name" | "rating" | "distance";
+  priceRange?: "budget" | "mid" | "upscale";
+  isOpen: boolean;
+  isFeatured: boolean;
+};
 
 export function SearchForm({
   filters,
@@ -29,24 +43,41 @@ export function SearchForm({
   const {
     register,
     watch,
-    handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<SearchFilters>({
+  } = useForm<FormData>({
     resolver: zodResolver(searchFiltersSchema),
-    defaultValues: filters,
+    defaultValues: {
+      query: filters?.query || "",
+      location: filters?.location,
+      cuisine: filters?.cuisine,
+      sortBy: filters?.sortBy,
+      priceRange: filters?.priceRange,
+      isOpen: filters?.isOpen,
+      isFeatured: filters?.isFeatured,
+    },
   });
 
   // Watch for changes and update filters
   const watchedValues = watch();
 
   useEffect(() => {
-    onFiltersChange(watchedValues);
+    // Transform the form data to match the SearchFilters interface
+    const transformedFilters = transformSearchFilters(watchedValues);
+    onFiltersChange(transformedFilters);
   }, [watchedValues, onFiltersChange]);
 
   // Reset form when filters prop changes externally
   useEffect(() => {
-    reset(filters);
+    reset({
+      query: filters.query,
+      location: filters.location,
+      cuisine: filters.cuisine,
+      sortBy: filters.sortBy,
+      priceRange: filters.priceRange,
+      isOpen: filters.isOpen,
+      isFeatured: filters.isFeatured,
+    });
   }, [filters, reset]);
 
   const handleClearFilters = () => {
