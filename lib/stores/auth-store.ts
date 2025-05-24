@@ -15,6 +15,7 @@ import {
   completeOnboarding as firebaseCompleteOnboarding,
   getUserProfile,
 } from "@/lib/firebase/auth";
+import { useOnboardingStore } from "./onboarding-store"; // Add this import
 
 export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
@@ -94,6 +95,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         userProfile: updatedProfile,
         loading: false,
       });
+
+      // Clear the onboarding store after successful completion
+      useOnboardingStore.getState().reset();
     } catch (error: any) {
       set({
         error: error.message,

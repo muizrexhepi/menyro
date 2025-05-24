@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { OnboardingLayout } from "@/components/onboarding/onboarding-layout";
 import { useAuth } from "@/hooks/use-auth";
+import { Logo } from "@/components/logo";
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -32,9 +33,9 @@ export default function OnboardingPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b py-4">
+      <header className="border-b py-4 px-4">
         <div className="container">
-          <h1 className="text-2xl font-bold">RestaurantOS</h1>
+          <Logo />
         </div>
       </header>
 
