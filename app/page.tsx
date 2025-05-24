@@ -15,12 +15,14 @@ const LandingPage: React.FC = () => {
     <div className="min-h-screen bg-white">
       <Hero />
       <RestaurantGrid
+        className="py-16"
         title="Featured Restaurants"
         subtitle="Hand-picked restaurants offering exceptional dining experiences"
         restaurants={featuredRestaurants}
         onRestaurantView={handleRestaurantView}
       />
       <RestaurantGrid
+        className="py-16"
         title="Top in Your City"
         subtitle="Popular dining spots in Tirana, Pristina, Skopje, and beyond"
         restaurants={topRestaurants}

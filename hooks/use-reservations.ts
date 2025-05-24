@@ -18,7 +18,7 @@ import type {
 } from "@/types/reservation";
 
 export const useReservations = (status?: string) => {
-  const { userProfile } = useAuth();
+  const { userProfile, loading: authLoading } = useAuth();
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [tables, setTables] = useState<Table[]>([]);
   const [loading, setLoading] = useState(true);
@@ -27,15 +27,37 @@ export const useReservations = (status?: string) => {
   const restaurantId = userProfile?.restaurantId;
 
   useEffect(() => {
-    if (!restaurantId) return;
+    console.log(
+      "useReservations effect - restaurantId:",
+      restaurantId,
+      "authLoading:",
+      authLoading
+    );
+
+    if (authLoading) {
+      return; // Wait for auth to load
+    }
+
+    if (!restaurantId) {
+      console.log("No restaurant ID found");
+      setLoading(false);
+      setError("No restaurant ID found");
+      return;
+    }
 
     setLoading(true);
     setError(null);
+
+    console.log(
+      "Setting up reservations subscription for restaurant:",
+      restaurantId
+    );
 
     // Subscribe to real-time updates
     const unsubscribe = subscribeToReservations(
       restaurantId,
       (reservationData) => {
+        console.log("Received reservations data:", reservationData);
         setReservations(reservationData);
         setLoading(false);
       },
@@ -43,17 +65,27 @@ export const useReservations = (status?: string) => {
     );
 
     // Load tables
-    getTables(restaurantId).then(setTables).catch(console.error);
+    getTables(restaurantId)
+      .then((tablesData) => {
+        console.log("Loaded tables:", tablesData);
+        setTables(tablesData);
+      })
+      .catch((err) => {
+        console.error("Error loading tables:", err);
+      });
 
     return unsubscribe;
-  }, [restaurantId, status]);
+  }, [restaurantId, status, authLoading]);
 
   const addReservation = async (data: CreateReservationData) => {
     if (!restaurantId) throw new Error("No restaurant ID");
     try {
       setError(null);
-      await createReservation(restaurantId, data);
+      console.log("Creating reservation with data:", data);
+      const reservationId = await createReservation(restaurantId, data);
+      console.log("Created reservation with ID:", reservationId);
     } catch (error: any) {
+      console.error("Error creating reservation:", error);
       setError(error.message);
       throw error;
     }

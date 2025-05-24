@@ -24,13 +24,13 @@ export default function Pricing() {
         </div>
 
         <div className="mt-8 grid gap-6 md:mt-20 md:grid-cols-3">
-          {/* Basic Plan */}
+          {/* Starter Plan */}
           <Card>
             <CardHeader>
               <CardTitle className="font-medium">Starter</CardTitle>
               <span className="my-3 block text-2xl font-semibold">Free</span>
               <CardDescription className="text-sm">
-                For small cafés or testing
+                Perfect for small cafés or trying out Menyro.
               </CardDescription>
               <Button asChild variant="outline" className="mt-4 w-full">
                 <Link href="/sign-up">Get Started</Link>
@@ -41,9 +41,13 @@ export default function Pricing() {
               <hr className="border-dashed" />
               <ul className="list-outside space-y-3 text-sm">
                 {[
-                  "QR Menu (10 items)",
+                  "QR Menu (up to 10 items)",
                   "Basic Restaurant Profile",
+                  "Map Location & Working Hours",
+                  "Menu Categories & Items",
+                  "Downloadable QR Code",
                   "Basic Analytics",
+                  "Native App Access",
                   "Email Support",
                 ].map((item, index) => (
                   <li key={index} className="flex items-center gap-2">
@@ -67,7 +71,7 @@ export default function Pricing() {
                 €19 / mo
               </span>
               <CardDescription className="text-sm">
-                Ideal for growing restaurants
+                Unlock your full potential with more tools.
               </CardDescription>
               <Button asChild className="mt-4 w-full">
                 <Link href="/sign-up">Get Started</Link>
@@ -78,12 +82,15 @@ export default function Pricing() {
               <hr className="border-dashed" />
               <ul className="list-outside space-y-3 text-sm">
                 {[
-                  "Unlimited QR Menu Items",
+                  "Unlimited Menu Items",
+                  "Reservations System",
+                  "Menu Item Photos",
                   "Custom Categories & Tags",
-                  "Reservation System",
-                  "Google Maps Integration",
-                  "Social Media Links",
+                  "Multi-language Support (MK, AL, EN)",
                   "Analytics Dashboard",
+                  "Social Media Links",
+                  "Remove Menyro Branding",
+                  "Custom Domain Support",
                   "Priority Email Support",
                 ].map((item, index) => (
                   <li key={index} className="flex items-center gap-2">
@@ -95,7 +102,7 @@ export default function Pricing() {
             </CardContent>
           </Card>
 
-          {/* Premium Plan */}
+          {/* Enterprise Plan */}
           <Card>
             <CardHeader>
               <CardTitle className="font-medium">Enterprise</CardTitle>
@@ -103,7 +110,7 @@ export default function Pricing() {
                 €39 / mo
               </span>
               <CardDescription className="text-sm">
-                For chains and premium restaurants
+                For chains and restaurants that need more.
               </CardDescription>
               <Button asChild variant="outline" className="mt-4 w-full">
                 <Link href="/contact">Contact Us</Link>
@@ -115,11 +122,13 @@ export default function Pricing() {
               <ul className="list-outside space-y-3 text-sm">
                 {[
                   "Everything in Pro Plan",
-                  "Multi-Location Support",
-                  "Staff Accounts & Roles",
-                  "Advanced Reporting",
+                  "Multi-Location Management",
+                  "Staff Accounts & Permissions",
+                  "Advanced Reports",
+                  "AI-based Menu Generator (soon)",
+                  "VIP Setup Assistance",
                   "Phone & Chat Support",
-                  "Custom Design Branding",
+                  "Custom Design & Branding",
                   "Priority Feature Requests",
                 ].map((item, index) => (
                   <li key={index} className="flex items-center gap-2">

@@ -4,12 +4,14 @@ import type React from "react";
 
 import type { Restaurant } from "@/types/restaurant";
 import { RestaurantCard } from "./restaurant-card";
+import { cn } from "@/lib/utils";
 
 interface RestaurantGridProps {
   title: string;
   subtitle?: string;
   restaurants: Restaurant[];
   onRestaurantView?: (restaurant: Restaurant) => void;
+  className?: string;
 }
 
 export const RestaurantGrid: React.FC<RestaurantGridProps> = ({
@@ -17,9 +19,10 @@ export const RestaurantGrid: React.FC<RestaurantGridProps> = ({
   subtitle,
   restaurants,
   onRestaurantView,
+  className = "",
 }) => {
   return (
-    <section className="py-16 px-4">
+    <section className={cn("px-4", className)}>
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">

@@ -10,7 +10,6 @@ import {
   orderBy,
   onSnapshot,
   serverTimestamp,
-  Timestamp,
 } from "firebase/firestore";
 import { db } from "./config";
 import type {
@@ -139,6 +138,13 @@ export const subscribeToReservations = (
   callback: (reservations: Reservation[]) => void,
   status?: string
 ): (() => void) => {
+  console.log(
+    "Setting up subscription for restaurantId:",
+    restaurantId,
+    "status:",
+    status
+  );
+
   let q = query(
     collection(db, "reservations"),
     where("restaurantId", "==", restaurantId),
@@ -156,19 +162,35 @@ export const subscribeToReservations = (
     );
   }
 
-  return onSnapshot(q, (querySnapshot) => {
-    const reservations = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-      createdAt:
-        doc.data().createdAt?.toDate?.()?.toISOString() ||
-        new Date().toISOString(),
-      updatedAt:
-        doc.data().updatedAt?.toDate?.()?.toISOString() ||
-        new Date().toISOString(),
-    })) as Reservation[];
-    callback(reservations);
-  });
+  return onSnapshot(
+    q,
+    (querySnapshot) => {
+      console.log(
+        "Firestore snapshot received, docs count:",
+        querySnapshot.size
+      );
+      const reservations = querySnapshot.docs.map((doc) => {
+        const data = doc.data();
+        console.log("Reservation doc data:", { id: doc.id, ...data });
+        return {
+          id: doc.id,
+          ...data,
+          createdAt:
+            data.createdAt?.toDate?.()?.toISOString() ||
+            new Date().toISOString(),
+          updatedAt:
+            data.updatedAt?.toDate?.()?.toISOString() ||
+            new Date().toISOString(),
+        };
+      }) as Reservation[];
+
+      console.log("Processed reservations:", reservations);
+      callback(reservations);
+    },
+    (error) => {
+      console.error("Firestore subscription error:", error);
+    }
+  );
 };
 
 // Tables

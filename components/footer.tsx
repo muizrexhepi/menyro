@@ -17,15 +17,13 @@ export default function FooterSection() {
   const path = usePathname();
   return (
     <footer
-      className={cn(
-        "bg-muted py-16",
-        path.includes("/dashboard") ||
+      className={cn("bg-muted py-16", {
+        hidden:
+          path.includes("/dashboard") ||
           path === "/sign-in" ||
           path === "/sign-up" ||
-          path === "onboarding"
-          ? "hidden"
-          : "block"
-      )}
+          path === "/onboarding", // also fix missing `/`
+      })}
     >
       <div className="mx-auto max-w-5xl px-6">
         <Link

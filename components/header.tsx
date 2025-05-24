@@ -37,20 +37,18 @@ export const Header = () => {
   }, []);
 
   return (
-    <header
-      className={cn(
-        "sticky top-0 z-20",
-        pathname === "/onboarding" && "hidden"
-      )}
-    >
+    <header>
       <nav
         data-state={menuState && "active"}
         className={cn(
-          "fixed z-20 w-full transition-all duration-300 px-4",
-          pathname === "/onboarding" ||
-            pathname === "/sign-in" ||
-            pathname === "/sign-up" ||
-            (pathname === "/dashboard" && "hidden"),
+          "transition-all duration-300 px-4",
+          {
+            hidden:
+              pathname === "/onboarding" ||
+              pathname === "/sign-in" ||
+              pathname === "/sign-up" ||
+              pathname.includes("/dashboard"),
+          },
           isScrolled &&
             "bg-background/75 border-b border-black/5 backdrop-blur-lg"
         )}
@@ -59,7 +57,7 @@ export const Header = () => {
           <div className="relative flex flex-wrap items-center justify-between gap-6 py-3 lg:gap-0">
             <div className="flex w-full justify-between gap-6 lg:w-auto">
               <Link
-                href={user ? "/dashboard" : "/"}
+                href={"/"}
                 aria-label="home"
                 className="flex items-center space-x-2"
               >
