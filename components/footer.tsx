@@ -1,5 +1,8 @@
+"use client";
 import { Logo } from "@/components/logo";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const links = [
   { title: "How It Works", href: "#" },
@@ -11,8 +14,19 @@ const links = [
 ];
 
 export default function FooterSection() {
+  const path = usePathname();
   return (
-    <footer className="bg-muted py-16">
+    <footer
+      className={cn(
+        "bg-muted py-16",
+        path.includes("/dashboard") ||
+          path === "/sign-in" ||
+          path === "/sign-up" ||
+          path === "onboarding"
+          ? "hidden"
+          : "block"
+      )}
+    >
       <div className="mx-auto max-w-5xl px-6">
         <Link
           href="/"

@@ -35,11 +35,20 @@ export const Header = () => {
   }, []);
 
   return (
-    <header>
+    <header
+      className={cn(
+        "sticky top-0 z-20",
+        pathname === "/onboarding" && "hidden"
+      )}
+    >
       <nav
         data-state={menuState && "active"}
         className={cn(
           "fixed z-20 w-full transition-all duration-300 px-4",
+          pathname === "/onboarding" ||
+            pathname === "/sign-in" ||
+            pathname === "/sign-up" ||
+            (pathname === "/dashboard" && "hidden"),
           isScrolled &&
             "bg-background/75 border-b border-black/5 backdrop-blur-lg"
         )}

@@ -6,6 +6,7 @@ export type Restaurant = {
   slug: string;
   description?: string;
   image?: string;
+  restaurantType?: string; // e.g. "Italian", "Fast Food", etc.
   bannerImage?: string;
   location: {
     address: string;
