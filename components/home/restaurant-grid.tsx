@@ -1,4 +1,8 @@
-import { Restaurant } from "@/types/restaurant";
+"use client";
+
+import type React from "react";
+
+import type { Restaurant } from "@/types/restaurant";
 import { RestaurantCard } from "./restaurant-card";
 
 interface RestaurantGridProps {

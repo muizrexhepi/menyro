@@ -1,5 +1,9 @@
-import { Restaurant } from "@/types/restaurant";
-import { Clock, Globe, MapPinMinus, Phone, Star } from "lucide-react";
+"use client";
+
+import type React from "react";
+
+import type { Restaurant } from "@/types/restaurant";
+import { Clock, Globe, MapPin, Phone, Star } from "lucide-react";
 
 interface RestaurantCardProps {
   restaurant: Restaurant;
@@ -37,7 +41,8 @@ export const RestaurantCard: React.FC<RestaurantCardProps> = ({
           src={
             restaurant.image ||
             restaurant.bannerImage ||
-            "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=300&fit=crop"
+            "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=300&fit=crop" ||
+            "/placeholder.svg"
           }
           alt={restaurant.name}
           className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
@@ -65,7 +70,7 @@ export const RestaurantCard: React.FC<RestaurantCardProps> = ({
           {restaurant.cuisineTypes?.join(", ") || "Restaurant"}
         </p>
         <div className="flex items-center text-gray-600 text-sm mb-3">
-          <MapPinMinus className="w-4 h-4 mr-1" />
+          <MapPin className="w-4 h-4 mr-1" />
           {restaurant.location.city}, {restaurant.location.country}
         </div>
         <p className="text-gray-600 text-sm mb-4 line-clamp-2">

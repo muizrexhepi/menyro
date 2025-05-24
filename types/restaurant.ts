@@ -1,5 +1,3 @@
-// types/restaurant.d.ts
-
 export type Restaurant = {
   id: string;
   name: string;
@@ -29,7 +27,7 @@ export type Restaurant = {
   }[];
   tags?: string[];
   cuisineTypes?: string[];
-  menu?: MenuCategory[]; // 👈 updated here
+  menu?: MenuCategory[];
   isFeatured?: boolean;
   isPremium?: boolean;
   createdAt: string;
